@@ -18,7 +18,8 @@ const (
 	SNATLBMode        LBModeType      = "snat"
 	DSRLBMode         LBModeType      = "dsr"
 	HybridLBMode      LBModeType      = "hybrid"
-	NormalRoutingMode RoutingModeType = "normal"
+	NativeRoutingMode RoutingModeType = "native"
+	TunnelRoutingMode RoutingModeType = "tunnel"
 )
 
 func (cn CNIProvider) IsValid() error {
@@ -197,7 +198,8 @@ func (t *LBModeType) MarshalJSON() ([]byte, error) {
 }
 
 func (t RoutingModeType) IsValid() error {
-	if t == NormalRoutingMode {
+	switch t {
+	case NativeRoutingMode, TunnelRoutingMode:
 		return nil
 	}
 	return fmt.Errorf("invalid RoutingModeType type: %v", t)
@@ -220,7 +222,8 @@ func (t RoutingModeType) String() string {
 
 func (t RoutingModeType) List() []RoutingModeType {
 	return []RoutingModeType{
-		NormalRoutingMode,
+		NativeRoutingMode,
+		TunnelRoutingMode,
 	}
 }
 
